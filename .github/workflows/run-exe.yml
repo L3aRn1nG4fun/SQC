@@ -1,0 +1,35 @@
+name: Run EXE with Inputs
+
+on:
+  workflow_dispatch:
+    inputs:
+      tenantUrl:
+        description: 'Tenant URL'
+        required: true
+        type: string
+      apiKey:
+        description: 'API Key'
+        required: true
+        type: string
+
+jobs:
+  run-exe:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Run EXE with parameters
+      run: |
+        echo Tenant URL: ${{ github.event.inputs.tenantUrl }}
+        echo API Key: ${{ github.event.inputs.apiKey }}
+        .\hcp-feature-util.exe "${{ github.event.inputs.tenantUrl }}" "${{ github.event.inputs.apiKey }}"
+      shell: powershell
+
+    - name: Upload output file
+      if: success()
+      uses: actions/upload-artifact@v3
+      with:
+        name: exe-output
+        path: output.log  # change if your EXE writes a different file
