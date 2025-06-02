@@ -1,0 +1,14 @@
+name: Test Upload Artifact
+
+on: workflow_dispatch
+
+jobs:
+  test-upload:
+    runs-on: windows-latest
+    steps:
+      - run: echo "Test log" > output.log
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: test-artifact
+          path: output.log
